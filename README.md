@@ -1,3 +1,3 @@
-# adoption-api
+# Animal Shelter API
 
-Animal Shelter API
+
