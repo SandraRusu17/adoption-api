@@ -1,6 +1,7 @@
 package com.p5.adoptions.repository.shelters;
 
 import com.p5.adoptions.repository.cats.Cat;
+import com.p5.adoptions.repository.dogs.Dog;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,54 +16,64 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class AnimalShelter
-{
+public class AnimalShelter {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
     @Column(unique = true)
     private String name;
 
+    private String location;
 
     //    Unidirectional OneToMany
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "shelter_id")
     private List<Cat> cats = new ArrayList<>();
 
-    //    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    //    @JoinColumn(name = "cat_id")
-    //    private Cat cat;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "shelter_id")
+    private List<Dog> dogs = new ArrayList<>();
 
-    //    Bidirectional
-    //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "shelter")
-    //    private List<Cat> cats = new ArrayList<>();
+    public List<Cat> getCats() {
+        return cats;
+    }
 
-    //    @ManyToMany
-    //    @JoinTable(name = "shelters_cats",
-    //               joinColumns = @JoinColumn(name = "shelter_id", referencedColumnName = "id"),
-    //               inverseJoinColumns = @JoinColumn(name = "cat_id", referencedColumnName = "id"))
-    //    private List<Cat> catss = new ArrayList<>();
+    public void setCats(List<Cat> cats) {
+        this.cats = cats;
+    }
 
+    public List<Dog> getDogs() {
+        return dogs;
+    }
 
-    public Integer getId()
-    {
+    public void setDogs(List<Dog> dogs) {
+        this.dogs = dogs;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public AnimalShelter setId(Integer id)
-    {
+    public AnimalShelter setId(Integer id) {
         this.id = id;
         return this;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public AnimalShelter setName(String name)
-    {
+    public AnimalShelter setName(String name) {
         this.name = name;
         return this;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }
