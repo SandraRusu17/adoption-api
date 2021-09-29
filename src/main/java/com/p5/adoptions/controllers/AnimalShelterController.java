@@ -1,6 +1,7 @@
 package com.p5.adoptions.controllers;
 
 import com.p5.adoptions.repository.cats.Cat;
+import com.p5.adoptions.repository.dogs.Dog;
 import com.p5.adoptions.repository.shelters.AnimalShelter;
 import com.p5.adoptions.service.AnimalShelterService;
 import org.springframework.http.HttpStatus;
@@ -53,5 +54,43 @@ public class AnimalShelterController {
     @PutMapping("/{shelterId}/cats")
     public ResponseEntity<List<Cat>> addNewCatToShelter(@PathVariable("shelterId") Integer shelterId, @RequestBody Cat cat) {
         return ResponseEntity.ok(animalShelterService.addNewCatToShelter(shelterId, cat));
+    }
+
+    @PatchMapping("/{shelterId}/cats/{catId}")
+    public ResponseEntity<Cat> updateCatInShelter(@PathVariable("shelterId") Integer shelterId,
+                                                  @PathVariable("catId") Integer catId, @RequestBody Cat cat) {
+        return ResponseEntity.ok(animalShelterService.updateCatInShelter(shelterId, catId, cat));
+    }
+
+    @DeleteMapping("/{shelterId}/cats/{catId}")
+    public ResponseEntity<Object> deleteCatInShelter(@PathVariable("shelterId") Integer shelterId,
+                                                     @PathVariable("catId") Integer catId) {
+        animalShelterService.deleteCatInShelter(shelterId, catId);
+        return ResponseEntity.status(HttpStatus.GONE).build();
+    }
+
+    @GetMapping("/{shelterId}/dogs")
+    public ResponseEntity<List<Dog>> getDogsForShelter(@PathVariable("shelterId") Integer shelterId) {
+        return ResponseEntity.ok(animalShelterService.findAllDogsByShelter(shelterId));
+    }
+
+    @PutMapping("/{shelterId}/dogs")
+    public ResponseEntity<List<Dog>> addNewDogToShelter(@PathVariable("shelterId") Integer shelterId,
+                                                        @RequestBody Dog dog) {
+        return ResponseEntity.ok(animalShelterService.addNewDogToShelter(shelterId, dog));
+    }
+
+    @PatchMapping("/{shelterId}/dogs/{dogId}")
+    public ResponseEntity<Dog> updateDogInShelter(@PathVariable("shelterId") Integer shelterId,
+                                                  @PathVariable("dogId") Integer dogId,
+                                                  @RequestBody Dog dog) {
+        return ResponseEntity.ok(animalShelterService.updateDogInShelter(shelterId, dogId, dog));
+    }
+
+    @DeleteMapping("/{shelterId}/dogs/{dogId}")
+    public ResponseEntity<Object> deleteDogInShelter(@PathVariable("shelterId") Integer shelterId,
+                                                     @PathVariable("dogId") Integer dogId) {
+        animalShelterService.deleteDogInShelter(shelterId, dogId);
+        return ResponseEntity.status(HttpStatus.GONE).build();
     }
 }
