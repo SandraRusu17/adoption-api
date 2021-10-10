@@ -4,15 +4,22 @@ import com.p5.adoptions.repository.cats.Cat;
 import com.p5.adoptions.repository.dogs.Dog;
 import com.p5.adoptions.repository.shelters.AnimalShelter;
 import com.p5.adoptions.repository.shelters.AnimalShelterRepository;
+import com.p5.adoptions.service.adapters.ShelterAdapter;
+import com.p5.adoptions.service.dto.ListDTO;
+import com.p5.adoptions.service.dto.ShelterDTO;
+import com.p5.adoptions.service.validations.OnCreate;
+import com.p5.adoptions.service.validations.OnUpdate;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaBuilder;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Validated
 public class AnimalShelterService {
 
     private final AnimalShelterRepository animalShelterRepository;
@@ -21,25 +28,38 @@ public class AnimalShelterService {
         this.animalShelterRepository = animalShelterRepository;
     }
 
-    public List<AnimalShelter> findAll() {
-        return animalShelterRepository.findAll();
+    public ListDTO<ShelterDTO> findAll() {
+        List<ShelterDTO> data =
+                ShelterAdapter.toDTOList(animalShelterRepository.findAll());
+        Long totalCount = animalShelterRepository.count();
+        ListDTO<ShelterDTO> response = new ListDTO<>();
+
+        response.setData(data);
+        response.setTotalCount(totalCount);
+
+        return response;
+    }
+    @Validated(OnCreate.class)
+    public ShelterDTO createShelter(@Valid ShelterDTO animalShelter) {
+        AnimalShelter shelter = ShelterAdapter.fromDTO(animalShelter);
+        AnimalShelter savedShelter = animalShelterRepository.save(shelter);
+        return ShelterAdapter.toDTO(savedShelter);
     }
 
-    public AnimalShelter createShelter(AnimalShelter animalShelter) {
-        return animalShelterRepository.save(animalShelter);
-    }
-
-    public AnimalShelter updateShelter(Integer id, AnimalShelter animalShelter) {
-        Optional<AnimalShelter> oldShelter = animalShelterRepository.findById(id);
-        if (oldShelter.isPresent()) {
-            animalShelter.setId(id);
-            return animalShelterRepository.save(animalShelter);
+    @Validated(OnUpdate.class)
+    public ShelterDTO updateShelter(Integer id, @Valid ShelterDTO animalShelter) {
+        AnimalShelter shelter = getShelterById(id);
+        if (!shelter.getId().equals(animalShelter.getId())) {
+            throw new RuntimeException("Id of entity not the same with path id");
         }
-        throw new EntityNotFoundException("Shelter with id " + id + " not found");
+        return ShelterAdapter
+                .toDTO(animalShelterRepository
+                        .save(ShelterAdapter.fromDTO(animalShelter)));
     }
 
-    public AnimalShelter findById(Integer id) {
-        return getShelterById(id);
+    public ShelterDTO findById(Integer id) {
+        AnimalShelter shelter = getShelterById(id);
+        return ShelterAdapter.toDTO(shelter);
     }
 
     public void deleteShelter(Integer id) {

@@ -2,12 +2,14 @@ package com.p5.adoptions.controllers;
 
 import com.p5.adoptions.repository.cats.Cat;
 import com.p5.adoptions.repository.dogs.Dog;
-import com.p5.adoptions.repository.shelters.AnimalShelter;
 import com.p5.adoptions.service.AnimalShelterService;
+import com.p5.adoptions.service.dto.ListDTO;
+import com.p5.adoptions.service.dto.ShelterDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,22 +23,22 @@ public class AnimalShelterController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<AnimalShelter>> getShelters() {
+    public ResponseEntity<ListDTO<ShelterDTO>> getShelters() {
         return ResponseEntity.ok(animalShelterService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AnimalShelter> getShelter(@PathVariable("id") Integer id) {
+    public ResponseEntity<ShelterDTO> getShelter(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(animalShelterService.findById(id));
     }
 
     @PostMapping()
-    public ResponseEntity<AnimalShelter> createShelter(@RequestBody AnimalShelter animalShelter) {
+    public ResponseEntity<ShelterDTO> createShelter(@Valid @RequestBody ShelterDTO animalShelter) {
         return ResponseEntity.ok(animalShelterService.createShelter(animalShelter));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AnimalShelter> updateShelter(@PathVariable("id") Integer id, @RequestBody AnimalShelter animalShelter) {
+    public ResponseEntity<ShelterDTO> updateShelter(@PathVariable("id") Integer id, @Valid @RequestBody ShelterDTO animalShelter) {
         return ResponseEntity.ok(animalShelterService.updateShelter(id, animalShelter));
     }
 
