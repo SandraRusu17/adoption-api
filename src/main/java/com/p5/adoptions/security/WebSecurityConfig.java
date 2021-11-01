@@ -37,6 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic()
                 .and().authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/v1/shelters").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/shelters/*").hasRole("USER")
                 .anyRequest().authenticated()
                 .and().csrf().disable();
     }
@@ -46,17 +47,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     {
        auth
                .userDetailsService(userDetailsService)
-               .passwordEncoder(passwordEncoder)
-               .and().authenticationProvider(authenticationProvider())
-               .jdbcAuthentication()
-               .dataSource(dataSource);
-    }
-
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder);
-        return provider;
+               .passwordEncoder(passwordEncoder);
     }
 }

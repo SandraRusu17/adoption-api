@@ -1,7 +1,7 @@
 package com.p5.adoptions.repository.users;
 
 public enum RolesEnum {
-    ADMIN,
-    MOD,
-    USER
+    ROLE_ADMIN,
+    ROLE_MOD,
+    ROLE_USER
 }

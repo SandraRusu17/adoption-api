@@ -24,6 +24,7 @@ public class AdoptionUserDetailsService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> userOptional = userRepository.findByEmail(username);
@@ -41,8 +42,8 @@ public class AdoptionUserDetailsService implements UserDetailsService {
             final String defaultEmail = "animalshelter@pentastagiu.io";
             final String defaultPassword = "password";
 
-            Role moderatorRole = roleRepository.findByRole(RolesEnum.MOD).orElseGet(() -> {
-                Role role = new Role().setRole(RolesEnum.MOD);
+            Role moderatorRole = roleRepository.findByRole(RolesEnum.ROLE_MOD).orElseGet(() -> {
+                Role role = new Role().setRole(RolesEnum.ROLE_MOD);
                 return roleRepository.save(role);
             });
 
