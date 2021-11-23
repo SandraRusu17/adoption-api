@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ShelterDTO {
 
@@ -81,5 +82,18 @@ public class ShelterDTO {
     public ShelterDTO setDogs(List<DogDTO> dogs) {
         this.dogs = dogs;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ShelterDTO that = (ShelterDTO) o;
+        return id.equals(that.id) && name.equals(that.name) && location.equals(that.location);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, location);
     }
 }
